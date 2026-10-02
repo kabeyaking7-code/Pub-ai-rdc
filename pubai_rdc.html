@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1f4b">
+<title>PubAI RDC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--n:#0b1f4b;--n2:#16327a;--a:#ffb300;--bg:#f3f6fc;--ink:#14213d;--dim:#5b6785;--ln:#dfe6f5}
+body{font:16px/1.5 system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:84px}
+.pg{display:none;padding:16px 14px;max-width:560px;margin:0 auto;animation:in .3s}.pg.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 12px #0b1f4b14}
+.hero{background:linear-gradient(135deg,var(--n),var(--n2));color:#fff;border-radius:22px;padding:28px 20px;text-align:center;margin-bottom:14px}
+.hero h1{font-size:2rem}.hero p{opacity:.92;margin:8px 0 16px}
+.flow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:.85rem;margin-bottom:6px}.flow span{background:#ffffff22;padding:4px 10px;border-radius:99px}
+h2{font-size:1.15rem;margin-bottom:10px;color:var(--n)}
+.btn{display:block;width:100%;padding:16px;border:0;border-radius:14px;background:var(--a);color:var(--n);font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer;margin-top:8px;transition:transform .15s}
+.btn:active{transform:scale(.97)}.btn.s{background:#e8eefc}.btn.d{background:#fde8e8;color:#b00020}.btn.sm{padding:11px;font-size:.9rem;margin-top:6px}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1 1 45%}
+label{display:block;font-size:.85rem;font-weight:600;margin:10px 0 4px;color:var(--dim)}
+input,select,textarea{width:100%;padding:13px;border:1.5px solid var(--ln);border-radius:12px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:10px 14px;border:1.5px solid var(--ln);border-radius:99px;background:#fff;font:inherit;font-size:.9rem;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--n);color:#fff;border-color:var(--n)}
+#pv{display:none;width:100%;border-radius:14px;margin-top:10px;max-height:320px;object-fit:cover}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--ln);padding:6px 2px calc(6px + env(safe-area-inset-bottom));z-index:5}
+nav button{flex:1;border:0;background:none;font:inherit;font-size:.66rem;color:var(--dim);display:flex;flex-direction:column;align-items:center;padding:4px 0}
+nav button b{font-size:1.3rem;font-weight:400}nav button.on{color:var(--n);font-weight:700}
+canvas{width:100%;border-radius:14px;display:block;background:#ddd}
+.item{border-top:1px solid var(--ln);padding:10px 0}.item:first-of-type{border-top:0}
+.item small{color:var(--dim);display:block;font-weight:600;margin-bottom:2px}.item div{white-space:pre-wrap;word-break:break-word}
+.h{display:flex;gap:12px;align-items:center}.h img{width:64px;height:64px;border-radius:12px;object-fit:cover}.h>div{flex:1}
+.plan.cur{border:2px solid var(--a)}.plan h3{color:var(--n)}.plan .pr{font-size:1.5rem;font-weight:800;color:var(--n)}.plan li{margin-left:18px}
+.empty{text-align:center;color:var(--dim)}
+#toast{position:fixed;left:14px;right:14px;bottom:96px;background:var(--n);color:#fff;padding:14px;border-radius:14px;text-align:center;z-index:9;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none}
+#toast.on{opacity:1;transform:none}#toast.err{background:#b00020}
+#ld{display:none;position:fixed;inset:0;background:#0b1f4bcc;z-index:10;color:#fff;align-items:center;justify-content:center;flex-direction:column;gap:14px;font-weight:600}
+#ld.on{display:flex}.sp{width:48px;height:48px;border:5px solid #ffffff44;border-top-color:var(--a);border-radius:50%;animation:r 1s linear infinite}@keyframes r{to{transform:rotate(360deg)}}
+.note{font-size:.8rem;color:var(--dim);margin-top:8px}
+</style>
+</head>
+<body>
+
+<section class="pg on" id="p-home">
+  <div class="hero">
+    <h1>PubAI RDC 🇨🇩</h1>
+    <p>Transforme une simple photo en publicité professionnelle.</p>
+    <div class="flow"><span>Photo</span>→<span>Affiche</span>→<span>Texte</span>→<span>Vidéo</span>→<span>Publication</span></div>
+    <button class="btn" data-a="go" data-v="create">🚀 Créer ma publicité</button>
+  </div>
+  <div class="card"><h2>Comment ça marche ?</h2>
+    <p>1️⃣ Prenez une photo de votre produit<br>2️⃣ Remplissez le nom, le prix et votre WhatsApp<br>3️⃣ Choisissez un style<br>4️⃣ Copiez les textes, téléchargez l'affiche et publiez !</p>
+    <p class="note">Mode démo : les textes sont générés par des modèles intégrés. Aucune IA n'est connectée pour le moment.</p></div>
+</section>
+
+<section class="pg" id="p-create">
+  <div class="card"><h2>📷 1. Photo du produit</h2>
+    <input type="file" id="f-gal" accept="image/*" hidden><input type="file" id="f-cam" accept="image/*" capture="environment" hidden>
+    <div class="row"><button class="btn s" data-a="pick" data-v="f-gal">🖼️ Galerie</button><button class="btn s" data-a="pick" data-v="f-cam">📸 Appareil photo</button></div>
+    <img id="pv" alt="Aperçu du produit"><button class="btn s sm" id="chg" data-a="pick" data-v="f-gal" style="display:none">🔄 Changer la photo</button></div>
+  <div class="card"><h2>📝 2. Infos du produit</h2>
+    <label>Nom du produit *</label><input id="nom" placeholder="Ex : Tecno Spark 20">
+    <div class="row"><div><label>Prix *</label><input id="prix" type="number" inputmode="numeric" placeholder="Ex : 350000"></div>
+    <div><label>Monnaie</label><select id="cur"><option>CDF</option><option>USD</option></select></div></div>
+    <label>Description courte</label><textarea id="desc" placeholder="Ex : 128 Go, grande batterie, double SIM"></textarea>
+    <label>Numéro WhatsApp *</label><input id="wa" type="tel" placeholder="Ex : +243 8X XXX XXXX">
+    <div class="row"><div><label>Ville</label><input id="ville" placeholder="Ex : Kolwezi"></div><div><label>Boutique</label><input id="boutique" placeholder="Nom de la boutique"></div></div>
+    <label>Catégorie</label><select id="cat"></select></div>
+  <div class="card"><h2>🎨 3. Style publicitaire</h2><div class="chips" id="styles"></div></div>
+  <button class="btn" data-a="gen">✨ Générer ma publicité</button>
+</section>
+
+<section class="pg" id="p-result"><div id="res"></div></section>
+<section class="pg" id="p-hist"><div id="hist"></div></section>
+<section class="pg" id="p-plans"><div id="plans"></div></section>
+
+<section class="pg" id="p-profile">
+  <div class="card"><h2>👤 Mon profil</h2>
+    <label>Nom de la boutique</label><input id="pf-shop"><label>Numéro WhatsApp</label><input id="pf-wa" type="tel">
+    <div class="row"><div><label>Ville</label><input id="pf-city"></div><div><label>Monnaie par défaut</label><select id="pf-cur"><option>CDF</option><option>USD</option></select></div></div>
+    <button class="btn" data-a="saveprof">💾 Enregistrer</button>
+    <p class="note">Ces infos pré-remplissent vos publicités. Elles restent sur ce téléphone.</p></div>
+  <div class="card" id="usage"></div>
+</section>
+
+<nav>
+  <button data-a="go" data-v="home" class="on"><b>🏠</b>Accueil</button>
+  <button data-a="go" data-v="create"><b>➕</b>Créer</button>
+  <button data-a="go" data-v="result"><b>🖼️</b>Résultats</button>
+  <button data-a="go" data-v="hist"><b>📁</b>Mes pubs</button>
+  <button data-a="go" data-v="plans"><b>⭐</b>Abonnement</button>
+  <button data-a="go" data-v="profile"><b>👤</b>Profil</button>
+</nav>
+<div id="toast"></div>
+<div id="ld"><div class="sp"></div><div>Création de votre publicité…</div></div>
+
+<script>
+/* ============ CONFIGURATION ============
+   API_URL : adresse de VOTRE backend sécurisé (ex : https://mon-serveur.com/api).
+   La clé de l'IA (Gemini ou autre) reste sur le serveur, jamais dans ce fichier. */
+const CONFIG={API_URL:'',
+  LIMITS:{free:3,pro:100},
+  PLANS:{
+    free:{n:'Gratuit',p:0,f:['3 publicités par jour','Modèles de base','Filigrane PubAI']},
+    pro:{n:'Pro',p:15000,f:['100 publicités par mois','Modèles premium','Scripts TikTok avancés','Sans filigrane']},
+    business:{n:'Business',p:40000,f:['Génération illimitée','Modèles premium','Outils avancés','Priorité de génération']}}};
+
+const CATS=['Téléphones','Vêtements','Chaussures','Accessoires','Beauté','Électronique','Alimentation','Maison','Autres'];
+const STYLES=[['promo','🔥 Promo','PROMO'],['premium','💎 Premium','PREMIUM'],['urgence','⚡ Urgence','DERNIERS'],['boutique','🛍️ Boutique','NOUVEAU'],['pro','🎯 Professionnel','FIABLE'],['speciale','🎉 Offre spéciale','OFFRE SPÉCIALE']];
+const TPL=[
+ {n:'Bleu & Or',bg:['#0b1f4b','#16327a'],ac:'#ffb300',tx:'#fff',free:1},
+ {n:'Flamme',bg:['#b3001b','#ff6a00'],ac:'#fff200',tx:'#fff',free:1},
+ {n:'Clair',bg:['#ffffff','#e3ebfb'],ac:'#0b1f4b',tx:'#0b1f4b',free:1},
+ {n:'Noir & Or',bg:['#0a0a0a','#2b2b2b'],ac:'#ffb300',tx:'#fff',free:0},
+ {n:'Émeraude',bg:['#00573f','#00a86b'],ac:'#ffd54f',tx:'#fff',free:0}];
+const BEN={'Téléphones':['grande autonomie','écran fluide','excellent rapport qualité-prix'],'Vêtements':['tissu confortable','coupe élégante','qualité durable'],'Chaussures':['confort toute la journée','finition soignée','semelle solide'],'Accessoires':['design tendance','qualité durable','prix accessible'],'Beauté':['résultats visibles','produit de qualité','texture agréable'],'Électronique':['performance fiable','garantie de qualité','prix imbattable'],'Alimentation':['produit frais','goût authentique','qualité garantie'],'Maison':['pratique au quotidien','qualité durable','prix avantageux'],'Autres':['qualité garantie','prix avantageux','livraison possible']};
+
+/* ============ OUTILS ============ */
+const $=s=>document.querySelector(s);
+const ld=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){toast('Mémoire pleine : supprimez d\'anciennes publicités','err');return false}};
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let S={photo:null,style:'promo',tpl:0,tab:'wa',edit:null},CUR=null,LIST=[],tt;
+let P=Object.assign({plan:'free',shop:'',wa:'',city:'',cur:'CDF'},ld('pubai_profile',{}));
+let U=ld('pubai_usage',{day:'',d:0,mon:'',m:0});
+
+function toast(m,t){const e=$('#toast');e.textContent=m;e.className='on '+(t||'');clearTimeout(tt);tt=setTimeout(()=>e.className='',2800)}
+function busy(on){$('#ld').classList.toggle('on',on)}
+function roll(){const t=new Date().toISOString().slice(0,10);if(U.day!==t){U.day=t;U.d=0}if(U.mon!==t.slice(0,7)){U.mon=t.slice(0,7);U.m=0}}
+function left(){roll();return P.plan==='free'?CONFIG.LIMITS.free-U.d:P.plan==='pro'?CONFIG.LIMITS.pro-U.m:Infinity}
+const money=(n,c)=>Number(n).toLocaleString('fr-FR')+' '+c;
+const tag=s=>'#'+String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]/g,'');
+function copyT(t){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Texte copié ✓')).catch(()=>{const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Texte copié ✓')}catch(e){toast('Copie impossible','err')}a.remove()})}
+
+/* ============ GÉNÉRATION (à remplacer par une vraie API plus tard) ============ */
+async function callApi(type,payload){
+  const r=await fetch(CONFIG.API_URL+'/'+type,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!r.ok)throw new Error('Le serveur a répondu '+r.status);
+  return r.json();
+}
+const route=(type,payload,demo)=>CONFIG.API_URL?callApi(type,payload):Promise.resolve(demo());
+
+function generateAdvertisement(d){return route('advertisement',{d,style:S.style},()=>{
+  const B=BEN[d.cat]||BEN.Autres,v=d.ville||'chez nous',nom=d.nom,H={
+   promo:'🔥 PROMO SUR '+nom.toUpperCase()+(d.ville?' À '+d.ville.toUpperCase():'')+' !',
+   premium:'💎 '+nom+' : la qualité premium'+(d.ville?' à '+d.ville:''),
+   urgence:'⚡ DERNIÈRES PIÈCES ! '+nom+(d.ville?' à '+d.ville:''),
+   boutique:'🛍️ NOUVEAUTÉ'+(d.boutique?' chez '+d.boutique:'')+' : '+nom,
+   pro:'🎯 '+nom+' : la solution fiable'+(d.ville?' à '+d.ville:''),
+   speciale:'🎉 OFFRE SPÉCIALE : '+nom+' !'},
+  A={promo:'Le bon plan à ne pas rater !',premium:'Offrez-vous le meilleur.',urgence:'Stock limité, ne tardez pas !',boutique:'Venez découvrir nos nouveautés.',pro:'Un choix sûr, une qualité prouvée.',speciale:'Une offre à saisir maintenant !'};
+  const base=[tag(d.ville||'RDC'),'#RDC','#RDCBusiness','#ShoppingRDC','#Kolwezi','#Lubumbashi','#Kinshasa',tag(d.cat)];
+  return{titre:H[S.style],
+   description:'Découvrez '+nom+(d.desc?' : '+d.desc.trim().replace(/[.\s]+$/,''):'')+'. '+B[0][0].toUpperCase()+B[0].slice(1)+', '+B[1]+' et '+B[2]+'.',
+   accroche:A[S.style],cta:'📲 Commandez maintenant sur WhatsApp au '+d.wa+' !',
+   hashtags:[...new Set(base)].slice(0,7)};
+})}
+
+function generateWhatsAppMessage(d,ad){return route('whatsapp',{d,ad},()=>{
+  const B=BEN[d.cat]||BEN.Autres;
+  return ad.titre+'\n\n'+d.nom+' — 💰 '+money(d.prix,d.cur)+'\n'+(d.desc?d.desc+'\n':'')+'✅ '+B[0]+'\n✅ '+B[1]+'\n'+(d.ville||d.boutique?'📍 '+[d.ville,d.boutique].filter(Boolean).join(' | ')+'\n':'')+'\n'+ad.cta;
+})}
+
+function generateSocialPost(net,d,ad){return route('social',{net,d,ad},()=>{
+  const B=BEN[d.cat]||BEN.Autres,pr=money(d.prix,d.cur);
+  if(net==='facebook')return ad.titre+'\n\n'+ad.description+'\n\n✅ '+B.join('\n✅ ')+'\n\n💰 Prix : '+pr+'\n📍 '+(d.ville||'RDC')+(d.boutique?' — '+d.boutique:'')+'\n\n'+ad.cta+'\n\n'+ad.hashtags.join(' ');
+  return ad.titre+'\n\n'+ad.accroche+' '+d.nom+' à '+pr+'.\n'+B[0]+' • '+B[1]+'\n\n📩 Commande en DM ou sur WhatsApp : '+d.wa+'\n\n'+ad.hashtags.join(' ');
+})}
+
+function generateTikTokScript(d,ad){return route('tiktok',{d,ad},()=>{
+  const B=BEN[d.cat]||BEN.Autres;
+  return[{t:'SCÈNE 1 — Hook (0-3 s)',x:'Tu cherches '+d.nom+(d.ville?' à '+d.ville:'')+' ? Regarde ça jusqu\'au bout !'},
+   {t:'SCÈNE 2 — Présentation du produit',x:'Voici '+d.nom+(d.desc?' : '+d.desc.trim().replace(/[.\s]+$/,''):'')+'. Montre le produit sous tous les angles.'},
+   {t:'SCÈNE 3 — Avantages',x:B[0][0].toUpperCase()+B[0].slice(1)+', '+B[1]+', '+B[2]+'. Affiche chaque avantage à l\'écran.'},
+   {t:'SCÈNE 4 — Prix',x:'Prix : '+money(d.prix,d.cur)+(d.boutique?' chez '+d.boutique:'')+'. Zoom sur le prix avec une musique dynamique.'},
+   {t:'SCÈNE 5 — Appel à l\'action',x:'Commande maintenant sur WhatsApp au '+d.wa+' ! Abonne-toi pour plus d\'offres.'}];
+})}
+
+/* ============ NAVIGATION ============ */
+function go(p){
+  document.querySelectorAll('.pg').forEach(e=>e.classList.toggle('on',e.id==='p-'+p));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===p));
+  window.scrollTo(0,0);
+  ({result:renderResult,hist:renderHist,plans:renderPlans,profile:renderProfile,create:prefill})[p]?.();
+}
+
+/* ============ PHOTO ============ */
+function loadPhoto(f){
+  if(!f)return;if(!f.type.startsWith('image/'))return toast('Ce fichier n\'est pas une image','err');
+  const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement('canvas');
+    c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+    S.photo=c.toDataURL('image/jpeg',.82);URL.revokeObjectURL(u);showPhoto()};
+  im.onerror=()=>toast('Image illisible, essayez une autre photo','err');im.src=u;
+}
+function showPhoto(){const p=$('#pv');p.style.display=S.photo?'block':'none';if(S.photo)p.src=S.photo;$('#chg').style.display=S.photo?'block':'none'}
+['f-gal','f-cam'].forEach(i=>$('#'+i).onchange=e=>{loadPhoto(e.target.files[0]);e.target.value=''});
+
+/* ============ FORMULAIRE ============ */
+$('#cat').innerHTML=CATS.map(c=>'<option>'+c+'</option>').join('');
+function buildStyles(){$('#styles').innerHTML=STYLES.map(s=>'<button class="chip'+(S.style===s[0]?' on':'')+'" data-a="style" data-v="'+s[0]+'">'+s[1]+'</button>').join('')}
+function prefill(){['wa','ville','boutique'].forEach((k,i)=>{const e=$('#'+k),v=[P.wa,P.city,P.shop][i];if(!e.value&&v)e.value=v});if(!S.edit)$('#cur').value=P.cur;showPhoto();buildStyles()}
+function readForm(){const g=i=>$('#'+i).value.trim();return{nom:g('nom'),prix:g('prix'),cur:g('cur'),desc:g('desc'),wa:g('wa'),ville:g('ville'),boutique:g('boutique'),cat:g('cat')}}
+function fillForm(d){Object.keys(d).forEach(k=>{const e=$('#'+k);if(e)e.value=d[k]})}
+
+async function gen(){
+  const d=readForm();
+  if(!S.photo)return toast('Ajoutez d\'abord une photo du produit','err');
+  if(!d.nom||!d.prix)return toast('Indiquez le nom et le prix du produit','err');
+  if(d.wa.replace(/\D/g,'').length<8)return toast('Entrez un numéro WhatsApp valide','err');
+  if(left()<=0){toast('Limite atteinte pour votre formule','err');return go('plans')}
+  busy(true);
+  try{
+    if(!CONFIG.API_URL)await sleep(1200);
+    const ad=await generateAdvertisement(d);
+    const[wa,fb,ig,tk]=await Promise.all([generateWhatsAppMessage(d,ad),generateSocialPost('facebook',d,ad),generateSocialPost('instagram',d,ad),generateTikTokScript(d,ad)]);
+    CUR={id:S.edit||Date.now(),date:new Date().toISOString(),d,style:S.style,tpl:S.tpl,photo:S.photo,out:{ad,wa,fb,ig,tt:tk}};
+    let h=ld('pubai_hist',[]).filter(x=>x.id!==CUR.id);h.unshift(CUR);
+    if(sv('pubai_hist',h.slice(0,20))){roll();U.d++;U.m++;sv('pubai_usage',U);toast('Publicité créée avec succès ! 🎉')}
+    S.edit=null;go('result');
+  }catch(e){toast('Impossible de générer : '+e.message,'err')}finally{busy(false)}
+}
+
+/* ============ AFFICHE (canvas) ============ */
+function wrap(c,t,x,y,w,lh,max){const ws=t.split(' ');let l='',n=0;for(let i=0;i<ws.length;i++){const s=l?l+' '+ws[i]:ws[i];if(c.measureText(s).width>w&&l){c.fillText(l,x,y);y+=lh;l=ws[i];if(++n>=max-1){c.fillText(ws.slice(i).join(' ').slice(0,26)+'…',x,y);return y}}else l=s}c.fillText(l,x,y);return y}
+function rr(c,x,y,w,h,r){c.beginPath();c.roundRect?c.roundRect(x,y,w,h,r):c.rect(x,y,w,h)}
+function drawPoster(){
+  const cv=$('#cv');if(!cv||!CUR)return;const c=cv.getContext('2d'),T=TPL[CUR.tpl],d=CUR.d,W=1080,H=1350;
+  const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,T.bg[0]);g.addColorStop(1,T.bg[1]);c.fillStyle=g;c.fillRect(0,0,W,H);
+  c.textAlign='center';c.fillStyle=T.ac;c.font='bold 44px sans-serif';c.fillText((d.boutique||'NOTRE BOUTIQUE').toUpperCase().slice(0,28),W/2,100);
+  const im=new Image();im.onload=()=>{
+    c.save();rr(c,60,140,960,620,36);c.clip();const k=Math.max(960/im.width,620/im.height),w=im.width*k,h=im.height*k;c.drawImage(im,60+(960-w)/2,140+(620-h)/2,w,h);c.restore();
+    c.fillStyle=T.ac;c.beginPath();c.arc(900,250,100,0,7);c.fill();c.fillStyle=T.bg[0]==='#ffffff'?'#fff':T.bg[0];c.font='bold 30px sans-serif';
+    const lb=STYLES.find(s=>s[0]===CUR.style)[2].split(' ');lb.forEach((w,i)=>c.fillText(w,900,250+(i-(lb.length-1)/2)*34+10));
+    c.fillStyle=T.tx;c.font='bold 68px sans-serif';const y=wrap(c,d.nom,W/2,860,940,76,2);
+    c.fillStyle=T.ac;rr(c,140,y+40,800,120,60);c.fill();c.fillStyle=T.bg[0]==='#ffffff'?'#fff':(T.ac==='#fff200'?'#b3001b':T.bg[0]);c.font='bold 74px sans-serif';c.fillText(money(d.prix,d.cur),W/2,y+122);
+    c.fillStyle=T.tx;c.font='36px sans-serif';c.fillText('📍 '+(d.ville||'RDC')+'   📲 '+d.wa,W/2,y+225);
+    c.fillStyle=T.tx;rr(c,140,1190,800,100,50);c.fill();c.fillStyle=T.bg[0]==='#ffffff'?'#0b1f4b':T.bg[1];c.font='bold 44px sans-serif';c.fillText('COMMANDER MAINTENANT',W/2,1255);
+    if(P.plan==='free'){c.fillStyle='#ffffffcc';c.font='28px sans-serif';c.fillText('Créé avec PubAI RDC',W/2,1328)}
+  };im.src=CUR.photo;
+}
+
+/* ============ RÉSULTATS ============ */
+const scriptText=t=>t.map(s=>s.t+'\n'+s.x).join('\n\n');
+function renderResult(){
+  const b=$('#res');
+  if(!CUR){b.innerHTML='<div class="card empty">Aucune publicité pour le moment.<button class="btn" data-a="go" data-v="create">🚀 Créer ma publicité</button></div>';return}
+  const o=CUR.out;
+  LIST=[o.ad.titre,o.ad.description,o.ad.accroche,o.ad.cta,o.ad.hashtags.join(' '),o.wa];
+  const names=['Titre publicitaire','Description du produit','Accroche courte',"Appel à l'action",'Hashtags','Message WhatsApp prêt à copier'];
+  const soc={wa:o.wa,fb:o.fb,tk:scriptText(o.tt),ig:o.ig};LIST.push(soc[S.tab],scriptText(o.tt));
+  b.innerHTML='<div class="card"><h2>🖼️ Votre affiche</h2><canvas id="cv" width="1080" height="1350"></canvas>'+
+   '<div class="chips" style="margin-top:10px">'+TPL.map((t,i)=>'<button class="chip'+(CUR.tpl===i?' on':'')+'" data-a="tpl" data-v="'+i+'">'+(t.free?'':'👑 ')+t.n+'</button>').join('')+'</div>'+
+   '<button class="btn" data-a="dl">⬇️ Télécharger l\'affiche</button></div>'+
+   '<div class="card"><h2>✍️ Textes publicitaires</h2>'+names.map((n,i)=>'<div class="item"><small>'+n+'</small><div>'+esc(LIST[i])+'</div><button class="btn s sm" data-a="copy" data-v="'+i+'">📋 Copier</button></div>').join('')+'</div>'+
+   '<div class="card"><h2>📣 Réseaux sociaux</h2><div class="chips">'+[['wa','📱 WhatsApp'],['fb','📘 Facebook'],['tk','🎵 TikTok'],['ig','📸 Instagram']].map(t=>'<button class="chip'+(S.tab===t[0]?' on':'')+'" data-a="tab" data-v="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+
+   '<div class="item"><div>'+esc(soc[S.tab])+'</div><button class="btn s sm" data-a="copy" data-v="6">📋 Copier le texte</button></div></div>'+
+   '<div class="card"><h2>🎬 Script vidéo</h2>'+o.tt.map(s=>'<div class="item"><small>'+esc(s.t)+'</small><div>'+esc(s.x)+'</div></div>').join('')+'<button class="btn s sm" data-a="copy" data-v="7">📋 Copier le script</button></div>'+
+   '<div class="card"><h2>🚀 Partager</h2><button class="btn" data-a="share" data-v="wa">💬 Partager sur WhatsApp</button><button class="btn s" data-a="share" data-v="fb">📘 Partager sur Facebook</button><button class="btn s" data-a="share" data-v="tg">✈️ Partager sur Telegram</button><button class="btn s" data-a="dltxt">📄 Télécharger le contenu</button></div>';
+  drawPoster();
+}
+function share(n){
+  const o=CUR.out;
+  if(n==='wa')window.open('https://wa.me/?text='+encodeURIComponent(o.wa),'_blank');
+  if(n==='tg')window.open('https://t.me/share/url?url=%20&text='+encodeURIComponent(o.wa),'_blank');
+  if(n==='fb'){copyT(o.fb);toast('Texte copié : collez-le dans votre publication Facebook');setTimeout(()=>window.open('https://www.facebook.com/','_blank'),900)}
+}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+const slug=()=>(CUR.d.nom||'pub').toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,30);
+
+/* ============ HISTORIQUE ============ */
+function renderHist(){
+  const h=ld('pubai_hist',[]),b=$('#hist');
+  if(!h.length){b.innerHTML='<div class="card empty">Vos publicités apparaîtront ici.<button class="btn" data-a="go" data-v="create">🚀 Créer ma publicité</button></div>';return}
+  b.innerHTML='<h2 style="margin:4px 2px 10px">📁 Mes publicités</h2>'+h.map(x=>'<div class="card"><div class="h"><img src="'+x.photo+'" alt=""><div><b>'+esc(x.d.nom)+'</b><br><small>'+new Date(x.date).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})+'</small></div></div>'+
+   '<div class="row"><button class="btn s sm" data-a="open" data-v="'+x.id+'">👁️ Voir</button><button class="btn s sm" data-a="edit" data-v="'+x.id+'">✏️ Modifier</button><button class="btn s sm" data-a="hcopy" data-v="'+x.id+'">📋 Copier</button><button class="btn d sm" data-a="hdel" data-v="'+x.id+'">🗑️ Supprimer</button></div></div>').join('');
+}
+const findH=id=>ld('pubai_hist',[]).find(x=>String(x.id)===String(id));
+
+/* ============ ABONNEMENT & PROFIL ============ */
+function renderPlans(){
+  $('#plans').innerHTML='<h2 style="margin:4px 2px 10px">⭐ Choisissez votre formule</h2>'+Object.entries(CONFIG.PLANS).map(([k,p])=>
+   '<div class="card plan'+(P.plan===k?' cur':'')+'"><h3>'+p.n+'</h3><div class="pr">'+(p.p?money(p.p,'CDF')+' <small style="font-size:.8rem;font-weight:400">/ mois</small>':'0 CDF')+'</div><ul style="margin:8px 0">'+p.f.map(f=>'<li>'+f+'</li>').join('')+'</ul>'+
+   (P.plan===k?'<button class="btn s" disabled>✅ Formule actuelle</button>':'<button class="btn" data-a="plan" data-v="'+k+'">Choisir '+p.n+'</button>')+'</div>').join('')+
+  '<p class="note">Prix indicatifs, modifiables dans CONFIG.PLANS. Le paiement Mobile Money n\'est pas encore connecté : en mode démo, la formule s\'active sans paiement.</p>';
+}
+/* Point d'entrée de la future intégration Mobile Money RDC */
+function payMobileMoney(plan){P.plan=plan;sv('pubai_profile',P);toast('Mode démo : formule '+CONFIG.PLANS[plan].n+' activée (paiement Mobile Money bientôt disponible)');renderPlans()}
+function renderProfile(){
+  $('#pf-shop').value=P.shop;$('#pf-wa').value=P.wa;$('#pf-city').value=P.city;$('#pf-cur').value=P.cur;
+  const l=left();$('#usage').innerHTML='<h2>📊 Mon utilisation</h2>Formule : <b>'+CONFIG.PLANS[P.plan].n+'</b><br>'+(l===Infinity?'Publicités illimitées':'Publicités restantes : <b>'+l+'</b> '+(P.plan==='free'?'aujourd\'hui':'ce mois-ci'));
+}
+
+/* ============ ACTIONS (délégation des clics) ============ */
+const A={
+  go:v=>go(v),pick:v=>$('#'+v).click(),style:v=>{S.style=v;buildStyles()},gen,
+  saveprof:()=>{P.shop=$('#pf-shop').value.trim();P.wa=$('#pf-wa').value.trim();P.city=$('#pf-city').value.trim();P.cur=$('#pf-cur').value;sv('pubai_profile',P);toast('Profil enregistré ✓')},
+  tpl:v=>{v=+v;if(!TPL[v].free&&P.plan==='free')return toast('Modèle réservé aux formules Pro et Business','err');CUR.tpl=v;renderResult()},
+  tab:v=>{S.tab=v;renderResult()},copy:v=>copyT(LIST[v]),
+  dl:()=>$('#cv').toBlob(b=>dl(b,'affiche-'+slug()+'.png')),
+  dltxt:()=>{const o=CUR.out;dl(new Blob([['TITRE',o.ad.titre,'','DESCRIPTION',o.ad.description,'','ACCROCHE',o.ad.accroche,'','APPEL À L\'ACTION',o.ad.cta,'','HASHTAGS',o.ad.hashtags.join(' '),'','WHATSAPP',o.wa,'','FACEBOOK',o.fb,'','INSTAGRAM',o.ig,'','SCRIPT VIDÉO',scriptText(o.tt)].join('\n')],{type:'text/plain'}),'contenu-'+slug()+'.txt')},
+  share,plan:payMobileMoney,
+  open:v=>{CUR=findH(v);if(CUR){S.style=CUR.style;go('result')}},
+  edit:v=>{const x=findH(v);if(!x)return;S.edit=x.id;S.photo=x.photo;S.style=x.style;S.tpl=x.tpl;go('create');fillForm(x.d);showPhoto();buildStyles();toast('Modifiez puis régénérez')},
+  hcopy:v=>{const x=findH(v);if(x)copyT(x.out.wa)},
+  hdel:v=>{if(!confirm('Supprimer cette publicité ?'))return;sv('pubai_hist',ld('pubai_hist',[]).filter(x=>String(x.id)!==String(v)));if(CUR&&String(CUR.id)===String(v))CUR=null;renderHist();toast('Publicité supprimée')}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.v)});
+buildStyles();
+</script>
+</body>
+</html>
